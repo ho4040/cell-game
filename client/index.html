@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Seogang pixijs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+
+    <script data-main="main" src="libs/requirejs/require.js"></script>
+    
+
+</head>
+<body>
+
+    <div id='gameArea'>
+
+    </div>
+
+    <div id="leaderBoard" style="padding:10px;color:white;text-shadow: 2px 2px black; z-index: 10;border-radius: 10px;background-color:silver;">
+        <h1>Leaderboard</h1>
+        <div id="rankContent"></div>
+        <button id="gameStartBtn">Start</button>
+    </div>
+
+    <div id="gameOver" style="padding:10px;color:white;text-shadow: 2px 2px black; z-index: 10;border-radius: 10px;background-color:silver;">
+        <h1>GameOver!!</h1>        
+        <div id="score"></div>        
+        <p>Save your record!!</p>        
+        <input type="text" id="playerNameInput">
+        <button id="scoreAddBtn">Submit!</button>
+    </div>
+
+</body>
+
+</html>

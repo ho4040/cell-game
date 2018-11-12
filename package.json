@@ -1,0 +1,22 @@
+{
+  "name": "html5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browser-sync": "^2.26.0",
+    "firebase": "^5.5.6",
+    "gulp": "^3.9.1",
+    "howler": "^2.0.15",
+    "jquery": "^3.3.1",
+    "ncp": "^2.0.0",
+    "pixi.js": "^4.8.2",
+    "requirejs": "^2.3.6",
+    "socket.io": "^2.1.1"
+  }
+}
