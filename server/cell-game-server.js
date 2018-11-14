@@ -27,7 +27,6 @@ function main(){
         })
 
         socket.on('move', function(data){
-            console.log(data)
             update(players[data.name], data)
             sockets.forEach(function(s){
                 s.emit('move', data)
