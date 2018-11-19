@@ -40,6 +40,8 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         return p;
     }
 
+    
+
     _m.removePlayer = function(name){
         if(name in gameObj){
             let node = gameObj[name];
@@ -78,6 +80,17 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         }
     }
 
+    _m.onGrow = function(data){
+        console.log(data)
+        let color = Math.random() * 0xFFFFFF;
+        let p = gameObj[data.name]        
+        p.radius = data.radius;
+        p.clear();
+        p.beginFill(color)
+        p.drawCircle(0, 0, p.radius)
+        p.endFill()
+    }
+
     _m.init = function () {
 
         console.log("game init")
@@ -89,6 +102,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         _m.socket.on('move', _m.onMove);
         _m.socket.on('stop', _m.onStop);
         _m.socket.on('remove', _m.onRemove);
+        _m.socket.on('grow', _m.onGrow);
         
         let firestore = firebase.firestore()
     
@@ -124,7 +138,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
 
     _m.enterFrame = function (delta) {
         
-        gameState.playTime = delta;
+        gameState.playTime += delta;
 
         for(let name in gameObj){
             let player = gameObj[name]
@@ -135,6 +149,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         }
 
         if(Math.floor(gameState.playTime * 10) % 5 == 0){ // to reduce packet send
+        //if(true){ // to reduce packet send
             let cursor = gameState.cursor;
 
             if(_m.myName in gameObj){
@@ -156,7 +171,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
                             y:player.y
                         }
                     })
-                }else if(l < stopEpsilon && theta < 10) {
+                }else if(l < stopEpsilon) {
                     _m.socket.emit("stop", {
                         name:_m.myName, 
                         pos:{
@@ -187,6 +202,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         _m.playerLayer = new PIXI.Container();
         _m.myName = "player" + Math.floor(Math.random()*100);
         console.log("my name", _m.myName)
+        
         _m.app.stage.addChild(_m.playerLayer)
         _m.app.stage.interactive = true;
         _m.app.stage.on('mousemove', _m.onMouseMove)
