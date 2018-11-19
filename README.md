@@ -12,6 +12,7 @@ npm install -g gulp
 
 필요한 라이브러리 설치
 ```
+cd cell-game
 npm install
 ```
 
