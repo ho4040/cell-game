@@ -40,8 +40,6 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         return p;
     }
 
-    
-
     _m.removePlayer = function(name){
         if(name in gameObj){
             let node = gameObj[name];
@@ -132,8 +130,6 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
 
         _m.showLeaderBoard()
 
-
-
     } //End of init method
 
     _m.enterFrame = function (delta) {
@@ -148,14 +144,27 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
             }
         }
 
+        //Move to center
+        if(gameObj[_m.myName]){
+            let player = gameObj[_m.myName]
+            let p1 = player.getGlobalPosition()
+            let p2 = {x:640 / 2, y:480 / 2}
+            let vec = sub(p2 , p1)
+            _m.playerLayer.x += vec.x;
+            _m.playerLayer.y += vec.y;
+            //console.log(vec)
+        }
+        
+
+
         if(Math.floor(gameState.playTime * 10) % 5 == 0){ // to reduce packet send
         //if(true){ // to reduce packet send
             let cursor = gameState.cursor;
-
+            //console.log(cursor)
             if(_m.myName in gameObj){
                 
                 let player = gameObj[_m.myName]
-                let vec = {x:cursor.x-player.x, y:cursor.y-player.y}
+                let vec = {x:cursor.x-320, y:cursor.y-240}
                 let l = len(vec)
                 vec.x /= l;
                 vec.y /= l;
@@ -171,7 +180,8 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
                             y:player.y
                         }
                     })
-                }else if(l < stopEpsilon) {
+                }
+                else if(l < stopEpsilon) {
                     _m.socket.emit("stop", {
                         name:_m.myName, 
                         pos:{

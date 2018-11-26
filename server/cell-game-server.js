@@ -10,6 +10,9 @@ function update(dest, src) {
     }
 }
 
+/*
+    랜덤으로 먹이 생성
+ */
 function randomFeed() {
     let name = 'feed' + Math.floor(Math.random() * 100000);
     players[name] = { name, pos: { x: Math.random() * 640, y: Math.random() * 480 }, vec: { x: 0, y: 0 }, radius: 3 }
@@ -18,6 +21,9 @@ function randomFeed() {
     });
 }
 
+/*
+    충돌검사
+ */
 function checkCollision() {
 
     let names = Object.keys(players);
@@ -37,9 +43,9 @@ function checkCollision() {
             if (dist < largeR) {
                 if (target_i.radius > target_j.radius) {
                     target_i.radius += target_j.radius;
-                    removePlayer(target_j.name)
+                    removePlayer(target_j.name) // 작은 플레이어는 제거
                     sockets.forEach(function (s) {
-                        s.emit('grow', target_i)
+                        s.emit('grow', target_i) // 큰 플레이어는 성장
                     });
                 } else {
                     target_j.radius += target_i.radius;
@@ -99,14 +105,13 @@ function main() {
         })
 
         socket.on('disconnect', function () {
-
-            removePlayer(socket.playerName)
+            removePlayer(socket.playerName) // 접속이 끊어진 사용자를 제거
             console.log('disconnected!', sockets.length)
         })
     })
 
-    setInterval(randomFeed, 5000);
-    setInterval(checkCollision, 100);
+    setInterval(randomFeed, 10000); // 10 초마다 먹이 생성
+    setInterval(checkCollision, 100); // 0.1 초 마다 충돌검사
 
     console.log("Game server is running!!")
 }
