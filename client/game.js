@@ -1,4 +1,4 @@
-define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
+define(['jquery', 'PIXI', 'firebase', 'io', 'Background'], function ($, PIXI, firebase, io, Background) {
     
     let _m = {};
 
@@ -6,7 +6,8 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
     let gameState = {
         playing : false,
         cursor : {x:0, y:0},
-        playTime : 0
+        playTime : 0,
+        frameCnt : 0
     }
     
     let sub = function (v1, v2) {
@@ -152,17 +153,16 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
             let vec = sub(p2 , p1)
             _m.playerLayer.x += vec.x;
             _m.playerLayer.y += vec.y;
-            //console.log(vec)
+            _m.bg.scollLike(_m.playerLayer.x, _m.playerLayer.y)
         }
         
 
+        gameState.frameCnt++
 
-        if(Math.floor(gameState.playTime * 10) % 5 == 0){ // to reduce packet send
-        //if(true){ // to reduce packet send
+        if(gameState.frameCnt % 10 == 0){ // to reduce packet send            
             let cursor = gameState.cursor;
-            //console.log(cursor)
+
             if(_m.myName in gameObj){
-                
                 let player = gameObj[_m.myName]
                 let vec = {x:cursor.x-320, y:cursor.y-240}
                 let l = len(vec)
@@ -171,6 +171,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
                 let lastMoveVec = player.moveVec != null ? player.moveVec : {x:0, y:0};
                 let theta = 180 * (Math.acos(dot(lastMoveVec, vec)) / (3.14))
                 let stopEpsilon = player.radius;
+
                 if(l > stopEpsilon && theta > 10) {
                     _m.socket.emit("move", {
                         name:_m.myName, 
@@ -180,8 +181,7 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
                             y:player.y
                         }
                     })
-                }
-                else if(l < stopEpsilon) {
+                }else if(l < stopEpsilon) {
                     _m.socket.emit("stop", {
                         name:_m.myName, 
                         pos:{
@@ -206,6 +206,11 @@ define(['jquery', 'PIXI', 'firebase', 'io'], function ($, PIXI, firebase, io) {
         gameState.playing = true;
         _m.app.stage.removeAllListeners();
         _m.app.stage.removeChildren();
+        
+        //Add grid background
+        console.log("background", Background)
+        _m.bg = Background.make(640, 480, 80)
+        _m.app.stage.addChild(_m.bg)
 
         _m.app.ticker.add(_m.enterFrame);
 

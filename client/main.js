@@ -6,7 +6,8 @@ requirejs.config({
         "PIXI": "libs/pixi.js/dist/pixi",
         "game": "game",
         "firebase": "//www.gstatic.com/firebasejs/5.5.5/firebase",
-        "io":"//cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io"
+        "io":"//cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io",
+        "Background":"Background",
     },
     shim: {
         'firebase': {
